@@ -1,0 +1,4 @@
+.env
+dotenv.txt
+venv
+testvenv

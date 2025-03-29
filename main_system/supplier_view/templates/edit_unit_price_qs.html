@@ -1,0 +1,64 @@
+{% extends 'supplier_base.html' %}
+
+{% block title %}Edit Unit Price{% endblock %}
+
+{% block content %}
+<style>
+.card {
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+h3 {
+    text-align: center;
+    font-size: 42px;
+    font-weight: bold;
+}
+
+.button-below-container {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding-bottom: 20px;
+}
+</style>
+
+<div class="container mt-5 d-flex justify-content-center">
+    <div class="card p-4" style="width: 500px;">
+        <h3 class="mb-4 text-center">Edit Unit Price</h3>
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="unit_price" class="form-label fw-bold">Unit Price</label>
+                <input type="number" class="form-control {% if form.unit_price.errors %}is-invalid{% endif %}" id="unit_price" name="unit_price" value="{{ form.unit_price.value|default:'' }}" min="1">
+                {% if form.unit_price.errors %}
+                    <div class="invalid-feedback">
+                        {% for error in form.unit_price.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label for="price_valid_until" class="form-label fw-bold">Price Valid Until</label>
+                <input type="date" class="form-control {% if form.price_valid_until.errors %}is-invalid{% endif %}" id="price_valid_until" name="price_valid_until" value="{{ form.price_valid_until.value|default:'' }}">
+                {% if form.price_valid_until.errors %}
+                    <div class="invalid-feedback">
+                        {% for error in form.price_valid_until.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="button-below-container">
+                <button type="submit" class="btn btn-primary w-100">Save</button>
+                <a href="{% url 'quotation_submission_list' %}" class="btn btn-secondary w-100">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

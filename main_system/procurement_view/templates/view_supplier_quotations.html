@@ -1,0 +1,87 @@
+{% extends 'procurement_base.html' %}
+
+{% block title %}Supplier Quotations{% endblock %}
+
+{% block content %}
+<style>
+.table-responsive {
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+h3 {
+    text-align: center;
+    font-size: 42px;
+    font-weight: bold;
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 40px;
+}
+</style>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>List of Supplier Quotations</h3>
+    </div>
+
+    <div class="table-responsive p-3 rounded-3 bg-light">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th scope="col" class="small">Quotation No.</th>
+                    <th scope="col" class="small">Prepared By</th>
+                    <th scope="col" class="small">Quote Valid Until</th>
+                    <th scope="col" class="small">Status</th>
+                    <th scope="col" class="text-center small">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for quotation in page_obj %}
+                    <tr>
+                        <td scope="row" class="small">{{ quotation.quotation_no }}</td>
+                        <td scope="row" class="small">{{ quotation.prepared_by }}</td>
+                        <td scope="row" class="small">{{ quotation.quote_valid_until }}</td>
+                        <td scope="row" class="small">
+                            {% if quotation.status == "Pending" %}
+                                <span class="badge bg-warning">{{ quotation.status }}</span>
+                            {% elif quotation.status == "Accepted" %}
+                                <span class="badge bg-success">{{ quotation.status }}</span>
+                            {% elif quotation.status == "Rejected" %}
+                                <span class="badge bg-danger">{{ quotation.status }}</span>
+                            {% else %}
+                                <span class="badge bg-">{{ quotation.status }}</span>
+                            {% endif %}
+                        </td>
+                        <td scope="row" class="text-center small">
+                            <a href="{% url 'supplier_quotation_submission_detail' quotation.signed_id %}" class="btn btn-outline-primary btn-sm">Details</a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">No supplier quotations found or wait until/after the deadline of Request Quotation.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}" class="text-primary small">Previous</a>
+        {% endif %}
+    
+        <span class="mx-2">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+    
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="text-primary small">Next</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="text-center m-3">
+    <a href="{% url 'request_quotation_list' %}" class="btn btn-secondary">Go Back</a>
+</div>
+{% endblock %}

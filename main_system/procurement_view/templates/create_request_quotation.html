@@ -1,0 +1,192 @@
+{% extends 'procurement_base.html' %}
+
+{% block title %}Create Request Quotation{% endblock %}
+
+{% block content %}
+    <style>
+        /* Input fields and button styling */
+        .form-control, .form-select {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s ease;
+            border-radius: 10px;
+        }
+
+        .form-control:hover, .form-select:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border-color: #406183;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #406183;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.25);
+            outline: none;
+        }
+
+        .btn-primary {
+            background-color: #0f1113;
+            border: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #406183;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-label {
+            font-weight: 600;
+        }
+
+        /* Custom separator styling */
+        .custom-separator {
+            margin-top: 40px;
+            border-top: 1px solid #ddd;
+            text-align: center;
+            position: relative;
+        }
+
+        #terms_and_conditions {
+            height: 120px;
+        }
+
+        .button-below-container {
+            display: flex;
+            align-items: center;
+            justify-content: end;
+            gap: 20px;
+            padding-bottom: 20px;
+        }
+        
+        .button-below-container a {
+            box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+
+    <div class="container mt-4">
+        <div class="card shadow-lg border-0">
+            <div class="card-header text-white" style="background-color: #8E0D0D;">
+                <h2 class="mb-0">Create Request Quotation</h2>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <h3 class="text-muted mb-3">Quotation Details</h3>
+
+                    <div class="row g-4">
+                        <div class="col-lg-6">
+                            <div class="mb-3">
+                                <label for="buyer_contact" class="form-label fw-bold mb-0">Buyer Contact</label>
+                                <input type="text" class="form-control {% if form.buyer_contact.errors %}is-invalid{% endif %}" id="buyer_contact" name="buyer_contact" value="{{ form.buyer_contact.value|default:'' }}">
+                                {% if form.buyer_contact.errors %}
+                                    <div class="invalid-feedback">{{ form.buyer_contact.errors }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="quote_valid_until" class="form-label fw-bold mb-0">Quote Valid Until</label>
+                                <input type="date" class="form-control {% if form.quote_valid_until.errors %}is-invalid{% endif %}" id="quote_valid_until" name="quote_valid_until" value="{{ form.quote_valid_until.value|default:'' }}">
+                                {% if form.quote_valid_until.errors %}
+                                    <div class="invalid-feedback">{{ form.quote_valid_until.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="mb-3">
+                                <label for="terms_and_conditions" class="form-label fw-bold mb-0">Terms and Conditions</label>
+                                <textarea class="form-control {% if form.terms_and_conditions.errors %}is-invalid{% endif %}" id="terms_and_conditions" name="terms_and_conditions">{{ form.terms_and_conditions.value|default:'' }}</textarea>
+                                {% if form.terms_and_conditions.errors %}
+                                    <div class="invalid-feedback">{{ form.terms_and_conditions.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="custom-separator"></div>
+
+                    <h3 class="text-muted mt-1 mb-3">Quotation Items</h3>
+                    {{ formset.management_form }}
+
+                    <div class="row g-4">
+                        {% for form in formset %}
+                            <div class="col-lg-4">
+                                <div class="card-body">
+                                    <h5 class="card-title">Item {{ forloop.counter }}</h5>
+
+                                    <div class="mb-2">
+                                        <label for="id_product_name_{{ forloop.counter0 }}" class="form-label fw-bold mb-0">Existing Product</label>
+                                        <select class="form-select" id="id_product_name_{{ forloop.counter0 }}" name="form-{{ forloop.counter0 }}-product_name">
+                                            {% for value, label in form.product_name.field.choices %}
+                                                <option value="{{ value }}" {% if value == form.product_name.value %}selected{% endif %}>{{ label }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-2">
+                                        <label for="id_other_product_name_{{ forloop.counter0 }}" class="form-label fw-bold mb-0">Custom Product</label>
+                                        <input type="text" class="form-control {% if form.other_product_name.errors %}is-invalid{% endif %}" id="id_other_product_name_{{ forloop.counter0 }}" name="form-{{ forloop.counter0 }}-other_product_name" value="{{ form.other_product_name.value|default:'' }}">
+                                        {% if form.other_product_name.errors %}
+                                            <div class="invalid-feedback">{{ form.other_product_name.errors }}</div>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <div class="mb-2">
+                                                <label for="id_quantity_{{ forloop.counter0 }}" class="form-label fw-bold mb-0">Quantity</label>
+                                                <input type="number" class="form-control {% if form.quantity.errors %}is-invalid{% endif %}" id="id_quantity_{{ forloop.counter0 }}" name="form-{{ forloop.counter0 }}-quantity" value="{{ form.quantity.value|default:'' }}">
+                                                {% if form.quantity.errors %}
+                                                    <div class="invalid-feedback">{{ form.quantity.errors }}</div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="mb-2">
+                                                <label for="id_measurement_{{ forloop.counter0 }}" class="form-label fw-bold mb-0">Actual Unit</label>
+                                                <input type="text" class="form-control {% if form.measurement.errors %}is-invalid{% endif %}" id="id_measurement_{{ forloop.counter0 }}" name="form-{{ forloop.counter0 }}-measurement" value="{{ form.measurement.value|default:'' }}">
+                                                {% if form.measurement.errors %}
+                                                    <div class="invalid-feedback">{{ form.measurement.errors }}</div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <div class="mb-2">
+                                                <label for="id_unit_price_{{ forloop.counter0 }}" class="form-label fw-bold mb-0">Price per Unit (₱)</label>
+                                                <input type="number" class="form-control {% if form.unit_price.errors %}is-invalid{% endif %}" id="id_unit_price_{{ forloop.counter0 }}" name="form-{{ forloop.counter0 }}-unit_price" value="{{ form.unit_price.value|default:'' }}">
+                                                {% if form.unit_price.errors %}
+                                                    <div class="invalid-feedback">{{ form.unit_price.errors }}</div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="mb-2">
+                                                <label for="id_price_valid_until_{{ forloop.counter0 }}" class="form-label fw-bold mb-0">Price Valid Until</label>
+                                                <input type="date" class="form-control {% if form.price_valid_until.errors %}is-invalid{% endif %}" id="id_price_valid_until_{{ forloop.counter0 }}" name="form-{{ forloop.counter0 }}-price_valid_until" value="{{ form.price_valid_until.value|default:'' }}">
+                                                {% if form.price_valid_until.errors %}
+                                                    <div class="invalid-feedback">{{ form.price_valid_until.errors }}</div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="button-below-container">
+                        <a href="{% url 'request_quotation_list' %}" class="btn btn-danger">Cancel</a>
+                        <button type="submit" class="btn btn-success">Submit Request Quotation</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,216 @@
+<style>
+/* General Styles */
+.nav-bar {
+    width: 100%;
+}
+
+nav {
+    background-color: #8E0D0D;
+    top: 0;
+    height: 10vh;
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.navbar-brand {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.navbar-brand:hover {
+    color: white;
+}
+
+.navbar-nav {
+    display: flex;
+    flex-direction: row;
+    list-style: none;
+    gap: 10px;
+}
+
+.navbar-nav .nav-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 10px;
+    transition: 0.5s ease;
+    border-radius: 10px;
+}
+
+.nav-item a {
+    color: white;
+    text-decoration: none;
+}
+
+.nav-item a:hover {
+    color: white;
+}
+
+.nav-item:hover {
+    background-color: #A21E1E;
+}
+
+/* Hamburger Menu Styles */
+.hamburger-container {
+    display: none;
+}
+
+.hamburger {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.hamburger div {
+    width: 25px;
+    height: 3px;
+    background-color: white;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 769px) {
+    .hamburger-container {
+        width: 94.5%;
+        display: flex;
+        justify-content: flex-end;
+        position: fixed;
+    }
+
+    .navbar-nav {
+        flex-direction: column;
+        width: 100%;
+        display: none;
+        margin-top: 10px;
+    }
+
+    .navbar-nav.show {
+        z-index: 15;
+        background-color: #A31E1E;
+        display: flex;
+        position: absolute;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        left: 0px;
+        top: 8vh;
+        width: 100%;
+        height: 91%;
+    }
+
+    .nav-item {
+        width: 100%;
+    }
+
+    .nav-link {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+@media screen and (max-width: 520px) {
+    .hamburger-container {
+        padding-right: 20px;
+    }
+}
+</style>
+
+<div class="nav-bar">
+    <nav>
+        <div class="navbar-brand">
+            My Hardware Store
+        </div>
+        
+        <div class="hamburger-container">
+            <div class="hamburger" id="hamburger">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+
+        <div class="navbar-nav" id="navbarNav">
+            {% if request.user.userpermission.role == "manager" %}
+                <div class="nav-item">
+                    <a class="nav-link" href="{% url 'pos_page' %}">
+                        <i class="bi bi-cart"></i>
+                        POS
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a class="nav-link" href="{% url 'dashboard' %}">
+                        <i class="bi bi-house-door"></i>
+                        Dashboard
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a class="nav-link" href="{% url 'product_list' %}">
+                        <i class="bi bi-box"></i>
+                        Inventory
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a class="nav-link" href="{% url 'request_quotation_list' %}">
+                        <i class="bi bi-file-earmark-plus"></i>
+                        Procurement
+                    </a>
+                </div>
+            {% elif request.user.userpermission.role == "employee" %}
+                <div class="nav-item">
+                    <a class="nav-link" href="{% url 'pos_page' %}">
+                        <i class="bi bi-cart"></i>
+                        POS
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a class="nav-link" href="{% url 'dashboard' %}">
+                        <i class="bi bi-house-door"></i>
+                        Dashboard
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a class="nav-link" href="{% url 'product_list' %}">
+                        <i class="bi bi-box"></i>
+                        Inventory
+                    </a>
+                </div>
+            {% elif request.user.userpermission.role == "supplier" %}
+            <div class="nav-item">
+                <a class="nav-link" href="{% url 'request_quotations_list' %}">
+                    <i class="bi bi-house-door"></i>
+                    Home
+                </a>
+            </div>
+            {% endif %}
+            
+            <div class="nav-item">
+                <a class="nav-link" href="{% url 'edit_profile' %}">
+                    <i class="bi bi-person"></i>
+                    Profile
+                </a>
+            </div>
+            <div class="nav-item">
+                <a class="nav-link" href="{% url 'logout' %}">
+                    <i class="bi bi-box-arrow-right"></i>
+                    Logout
+                </a>
+            </div>
+        </div>
+    </nav>
+</div>
+
+<script>
+    const hamburger = document.getElementById('hamburger');
+    const navbarNav = document.getElementById('navbarNav');
+
+    hamburger.addEventListener('click', () => {
+        navbarNav.classList.toggle('show');
+    });
+</script>

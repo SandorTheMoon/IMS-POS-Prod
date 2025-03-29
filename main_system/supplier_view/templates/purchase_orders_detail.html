@@ -1,0 +1,138 @@
+{% extends 'supplier_base.html' %}
+
+{% block title %}View Purchase Order Details{% endblock %}
+
+{% block content %}
+<style>
+.card {
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+h3 {
+    text-align: center;
+    font-size: 42px;
+    font-weight: bold;
+}
+
+.button-below-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding-bottom: 20px;
+}
+
+.button-below-container a {
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
+}
+</style>
+
+<div class="card mt-5 mb-5 m-auto p-5 w-75">
+    <h3 class="mb-4 text-center">Purchase Order Details</h3>
+
+    <!-- Purchase Order Information -->
+    <div class="row mb-2">
+        <div class="col-md-6">
+            <p class="small text-muted mb-2"><strong>Purchase Order No:</strong> {{ purchase_order.quotation_no }}</p>
+            <p class="small text-muted mb-2"><strong>Buyer Company Name:</strong> {{ purchase_order.buyer_company_name }}</p>
+            <p class="small text-muted mb-2"><strong>Buyer Address:</strong> {{ purchase_order.buyer_address }}</p>
+            <hr>
+            <p class="small text-muted mb-2"><strong>Supplier Company Name:</strong> {{ purchase_order.supplier_company_name }}</p>
+            <p class="small text-muted mb-2"><strong>Supplier Address:</strong> {{ purchase_order.supplier_company_address }}</p>
+            <p class="small text-muted mb-2"><strong>Supplier Contact:</strong> {{ purchase_order.supplier_company_contact }}</p>
+        </div>
+        <div class="col-md-6">
+            <p class="small text-muted mb-2"><strong>Approved by:</strong> {{ purchase_order.approved_by }}</p>
+            <p class="small text-muted mb-2"><strong>Date Ordered:</strong> {{ purchase_order.date_ordered }}</p>
+            <p class="small text-muted mb-2"><strong>Delivery Date:</strong> {{ purchase_order.delivery_date }}</p>
+        </div>
+    </div>
+
+    <div class="mb-2">
+        <hr>
+        <p class="small text-muted mb-2"><strong>Order Status:</strong>
+            {% if purchase_order.status == "Pending" %}
+                <span class="text-warning">{{ purchase_order.status }}</span>
+            {% elif purchase_order.status == "Approved" %}
+                <span class="text-success">{{ purchase_order.status }}</span>
+            {% elif purchase_order.status == "Rejected" %}
+                <span class="text-danger">{{ purchase_order.status }}</span>
+            {% elif purchase_order.status == "Delivered" %}
+                <span class="text-primary">{{ purchase_order.status }}</span>
+            {% elif purchase_order.status == "Received" %}
+                <span class="text-success">{{ purchase_order.status }}</span>
+            {% elif purchase_order.status == "Cancelled" %}
+                <span class="text-secondary">{{ purchase_order.status }}</span>
+            {% else %}
+                <span class="bg-light text-dark">Unavailable</span>
+            {% endif %}
+        </p>
+        <p class="small text-muted mb-2"><strong>Notes:</strong> {{ purchase_order.notes }}</p>
+    </div>
+
+    <!-- Approve/Reject or Deliver/Cancel Actions -->
+    {% if purchase_order.status == "Pending" %}
+        <form method="post" class="mt-0">
+            {% csrf_token %}
+            <button type="submit" name="approve" class="btn btn-sm btn-success">Approve</button>
+            <button type="submit" name="reject" class="btn btn-sm btn-danger">Reject</button>
+        </form>
+    {% endif %}
+
+    {% if purchase_order.status == "Approved" %}
+        <form method="post" class="mt-0">
+            {% csrf_token %}
+            <button type="submit" name="deliver" class="btn btn-sm btn-primary">Deliver</button>
+            <button type="submit" name="cancel" class="btn btn-sm btn-secondary">Cancel</button>
+        </form>
+    {% endif %}
+
+    <!-- Items in this Purchase Order -->
+    <div class="mb-4" style="overflow-y: auto;">
+        <hr>
+        <table class="table table-hover" style="overflow-y: auto; width: 100%;">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col"><p class="small text-muted mb-0">Product Name</p></th>
+                    <th scope="col"><p class="small text-muted mb-0">Quantity</p></th>
+                    <th scope="col"><p class="small text-muted mb-0">Actual Unit</p></th>
+                    <th scope="col"><p class="small text-muted mb-0">Unit Price</p></th>
+                    <th scope="col"><p class="small text-muted mb-0">Total Price</p></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                    <tr>
+                        <td scope="row"><p class="small text-muted mb-0">{{ item.product_name }}</p></td>
+                        <td scope="row"><p class="small text-muted mb-0">{{ item.quantity }}</p></td>
+                        <td scope="row"><p class="small text-muted mb-0">{{ item.measurement }}</p></td>
+                        <td scope="row"><p class="small text-muted mb-0">₱ {{ item.unit_price }}</p></td>
+                        <td scope="row"><p class="small text-muted mb-0">₱ {{ item.total_price|floatformat:2 }}</p></td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center text-secondary">No items found for this Purchase Order.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <hr>
+        <div class="row mb-2">
+            <div class="col-md-8">
+            </div>
+            <div class="col-md-4">
+                <p class="small text-muted mb-2"><strong>Total Amount:</strong> ₱ {{ purchase_order.total_amount }}</p>
+                <p class="small text-muted mb-2"><strong>VAT (12%):</strong> ₱ {{ vat|floatformat:2 }}</p>
+                <hr>
+                <p class="small text-muted mb-2"><strong>Total Amount (VAT Inclusive):</strong> ₱ {{ purchase_order.total_amount_with_vat }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="text-center button-below-container">
+    <a href="{% url 'purchase_orders_list' %}" class="btn btn-secondary">Back</a>
+    <a href="{% url 'download_purchase_orders_pdf' purchase_order.id %}" class="btn btn-primary">Download PDF</a>
+</div>
+{% endblock %}

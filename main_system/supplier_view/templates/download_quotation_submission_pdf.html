@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quotation Submission PDF</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f4f4f4; }
+    </style>
+</head>
+<body>
+    <table>
+        <thead>
+            <th colspan="2"><center><strong>Quotation Details:</strong> {{ quotation_submission.quotation_no }}</center></th>
+            
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Buyer Company:</strong> {{ quotation_submission.buyer_company_name }}</td>
+                <td><strong>Supplier Company:</strong> {{ quotation_submission.supplier_company_name }}</td>
+            </tr>
+            <tr>
+                <td rowspan="2"><strong>Buyer Address:</strong> {{ quotation_submission.buyer_address }}</td>
+                <td><strong>Supplier Address:</strong> {{ quotation_submission.supplier_company_address }}</td>
+            </tr>
+            <tr>
+                <td><strong>Supplier Contact:</strong> {{ quotation_submission.supplier_company_contact }}</td>
+            </tr>
+            <tr>
+                <td><strong>Buyer VAT Reg TIN:</strong> 123-456-789-00000</td>
+                <td><strong>Supplier VAT Reg TIN:</strong> 123-456-789-00000 </td>
+            </tr>
+            <tr>
+                <td colspan="2"><strong>Order Status:</strong> {{ quotation_submission.status }}</td>
+            </tr>
+        </tbody>
+    </table>
+    
+
+    <center><h2>Items</h2></center>
+    <table>
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Quantity</th>
+                <th>Actual Unit</th>
+                <th>Unit Price</th>
+                <th>Total Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item.product_name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.measurement }}</td>
+                <td>Php {{ item.unit_price }}</td>
+                <td>Php {{ item.total_price }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <p><strong>Total Amount:</strong> Php {{ quotation_submission.total_amount }}</p>
+    <p><strong>VAT:</strong> Php {{ vat|floatformat:2 }}</p>
+    <p><strong>Total (VAT Inclusive):</strong> Php {{ quotation_submission.total_amount_with_vat }}</p>
+</body>
+</html>

@@ -1,0 +1,192 @@
+{% extends 'inventory_base.html' %}
+
+{% block title %}Edit Product - {{ product.name }}{% endblock %}
+
+{% block content %}
+<style>
+.box-container {
+    background-color: white;
+    margin: 30px auto;
+    width: 40%;
+    height: 90%;
+    border-radius: 10px;
+    padding: 40px;
+    overflow-y: auto;
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.title-container {
+    margin-bottom: 20px;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+.form-container .form-label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.form-container input {
+    border-radius: 10px;
+}
+
+.form-container select {
+    border-radius: 10px;
+}
+
+.lower-form-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.buttons-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.buttons-container .btn {
+    border-radius: 10px;
+}
+
+@media screen and (max-width: 820px) {
+    .box-container {
+        width: 60%;
+    }
+}
+
+@media screen and (max-width: 520px) {
+    .box-container {
+        width: 90%;
+    }
+
+    .title-container h2 {
+        font-size: 20px;
+    }
+
+    .form-container .form-label {
+        font-size: 14px;
+    }
+
+    .form-container input,
+    .form-container select {
+        height: 35px;
+    }
+
+    .lower-form-container {
+        gap: 15px;
+    }
+    
+    .buttons-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .buttons-container .btn {
+        height: 35px;
+        width: 140px;
+        font-size: 14px;
+    }
+
+}
+</style>
+
+<div class="box-container">
+    <div class="title-container">
+        <h2>Edit Product: <strong>{{ product.name }}</strong></h2>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-container">
+            <label class="form-label">Name</label>
+            <input type="text" class="form-control {% if form.name.errors %}is-invalid{% endif %}" id="name" name="name" value="{{ form.name.value|default:'' }}">
+            {% if form.name.errors %}
+                <div class="invalid-feedback">
+                    {% for error in form.name.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-container">
+            <label class="form-label">Category</label>
+            <select class="form-control {% if form.category.errors %}is-invalid{% endif %}" id="category" name="category" value="{{ form.category.value|default:'' }}">
+                <option value="">--- Select Product Category ---</option>
+                {% for value, label in form.category.field.widget.choices %}
+                    <option value="{{ value }}" {% if value == form.category.value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+            {% if form.category.errors %}
+                <div class="invalid-feedback">
+                    Invalid category.
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-container">
+            <label class="form-label">Actual Unit</label>
+            <input type="text" class="form-control {% if form.measurement.errors %}is-invalid{% endif %}" id="measurement" name="measurement" value="{{ form.measurement.value|default:'' }}">
+            {% if form.measurement.errors %}
+                <div class="invalid-feedback">
+                    {% for error in form.measurement.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-container">
+            <label class="form-label">Reorder Level</label>
+            <input type="number" class="form-control {% if form.reorder_level.errors %}is-invalid{% endif %}" id="reorder_level" name="reorder_level" value="{{ form.reorder_level.value|default:'' }}">
+            {% if form.reorder_level.errors %}
+                <div class="invalid-feedback">
+                    {% for error in form.reorder_level.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="lower-form-container">
+            <div class="form-container">
+                <label class="form-label">Selling Price</label>
+                <input type="number" class="form-control {% if form.selling_price.errors %}is-invalid{% endif %}" id="selling_price" name="selling_price" value="{{ form.selling_price.value|default:'' }}">
+                {% if form.selling_price.errors %}
+                    <div class="invalid-feedback">
+                        {% for error in form.selling_price.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="form-container">
+                <label class="form-label">Cost Price</label>
+                <input type="number" class="form-control {% if form.cost_price.errors %}is-invalid{% endif %}" id="cost_price" name="cost_price" value="{{ form.cost_price.value|default:'' }}">
+                {% if form.cost_price.errors %}
+                    <div class="invalid-feedback">
+                        {% for error in form.cost_price.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="buttons-container">
+            <a href="{% url 'product_list' %}" class="btn btn-danger">Cancel</a>
+            <button type="submit" class="btn btn-success">Save</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

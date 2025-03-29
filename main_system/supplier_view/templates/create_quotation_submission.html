@@ -1,0 +1,204 @@
+{% extends 'supplier_base.html' %}
+
+{% block title %}Create Quotation Submission{% endblock %}
+
+{% block content %}
+    <style>
+        /* Input fields and button styling */
+        .form-control, .form-select {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s ease;
+            border-radius: 10px;
+        }
+
+        .form-control:hover, .form-select:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border-color: #406183;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #406183;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.25);
+            outline: none;
+        }
+
+        .btn-primary {
+            background-color: #0f1113;
+            border: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #406183;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-label {
+            font-weight: 600;
+        }
+
+        /* Custom separator styling */
+        .custom-separator {
+            margin: 40px 0;
+            border-top: 2px solid #ddd;
+            text-align: center;
+            position: relative;
+        }
+
+        .custom-separator::before {
+            content: '• • •';
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #007bff;
+            background-color: #fff;
+            padding: 0 10px;
+            position: absolute;
+            top: -16px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .card {
+            box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .button-below-container {
+            display: flex;
+            align-items: center;
+            justify-content: end;
+            gap: 20px;
+            padding-bottom: 20px;
+        }
+
+        .button-below-container a {
+            box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
+}
+    </style>
+
+    <div class="container mt-5">
+        <div class="card border-0">
+            <div class="card-header text-white" style="background-color: #8E0D0D;">
+                <h2 class="mb-0">Quotation Submission</h2>
+            </div>
+            
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <h4 class="text-muted mb-4">Quotation Details</h4>
+                    <div class="row g-4">
+                        <div class="col-lg-6">
+                            <label class="form-label fw-bold">Buyer Company Name</label>
+                            <p class="form-control-plaintext">{{ quotation_request.buyer_company_name }}</p>
+                        </div>
+                        <div class="col-lg-6">
+                            <label class="form-label fw-bold">Buyer Address</label>
+                            <p class="form-control-plaintext">{{ quotation_request.buyer_address }}</p>
+                        </div>
+                    </div>
+                    <div class="row g-4">
+                        <div class="col-lg-12">
+                            <label class="form-label fw-bold">Buyer Contact</label>
+                            <p class="form-control-plaintext">{{ quotation_request.buyer_contact }}</p>
+                        </div>
+                    </div>
+
+                    <div class="row g-4">
+                        <div class="col-lg-12">
+                            <label for="terms_and_conditions" class="form-label fw-bold">Terms and Conditions</label>
+                            <textarea class="form-control {% if form.terms_and_conditions.errors %}is-invalid{% endif %}" id="terms_and_conditions" name="terms_and_conditions">{{ form.terms_and_conditions.value|default:'' }}</textarea>
+                            {% if form.terms_and_conditions.errors %}
+                                <div class="invalid-feedback">{{ form.terms_and_conditions.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="row g-4">
+                        <div class="col-lg-6">
+                            <label for="prepared_by" class="form-label fw-bold">Prepared By</label>
+                            <input type="text" class="form-control {% if form.prepared_by.errors %}is-invalid{% endif %}" id="prepared_by" name="prepared_by" value="{{ form.prepared_by.value|default:'' }}">
+                            {% if form.prepared_by.errors %}
+                                <div class="invalid-feedback">{{ form.prepared_by.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-lg-6">
+                            <label for="quote_valid_until" class="form-label fw-bold">Quote Valid Until</label>
+                            <input type="date" class="form-control {% if form.quote_valid_until.errors %}is-invalid{% endif %}" id="quote_valid_until" name="quote_valid_until" value="{{ form.quote_valid_until.value|default:'' }}">
+                            {% if form.quote_valid_until.errors %}
+                                <div class="invalid-feedback">{{ form.quote_valid_until.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="custom-separator"></div>
+
+                    <h4 class="text-muted mt-4 mb-4">Quotation Items</h4>
+                    {{ formset.management_form }}
+
+                    <div class="row g-4">
+                        {% for form in formset.forms %}
+                            <div class="col-lg-4">
+                                <div class="card h-100 shadow-sm border-0">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Item {{ forloop.counter }}</h5>
+
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Product</label>
+                                            <p class="form-control-plaintext">{{ form.product_name.value }}</p>
+                                            <input type="hidden" class="form-control {% if form.product_name.errors %}is-invalid{% endif %}" id="id_product_name_{{ forloop.counter0 }}" name="form-{{ forloop.counter0 }}-product_name" value="{{ form.product_name.value|default:'' }}">
+                                            {% if form.product_name.errors %}
+                                                <div class="invalid-feedback">{{ form.product_name.errors }}</div>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Quantity</label>
+                                            <p class="form-control-plaintext">{{ form.quantity.value }}</p>
+                                            <input type="hidden" class="form-control {% if form.quantity.errors %}is-invalid{% endif %}" id="id_quantity_{{ forloop.counter0 }}" name="form-{{ forloop.counter0 }}-quantity" value="{{ form.quantity.value|default:'' }}">
+                                            {% if form.quantity.errors %}
+                                                <div class="invalid-feedback">{{ form.quantity.errors }}</div>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Actual Unit</label>
+                                            <p class="form-control-plaintext">{{ form.measurement.value }}</p>
+                                            <input type="hidden" class="form-control {% if form.measurement.errors %}is-invalid{% endif %}" id="id_measurement_{{ forloop.counter0 }}" name="form-{{ forloop.counter0 }}-measurement" value="{{ form.measurement.value|default:'' }}">
+                                            {% if form.measurement.errors %}
+                                                <div class="invalid-feedback">{{ form.measurement.errors }}</div>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="id_unit_price_{{ forloop.counter0 }}" class="form-label fw-bold">Proposed Price per Unit</label>
+                                            <input type="number" class="form-control {% if form.unit_price.errors %}is-invalid{% endif %}" id="id_unit_price_{{ forloop.counter0 }}" name="form-{{ forloop.counter0 }}-unit_price" value="{{ form.unit_price.value|default:'' }}">
+                                            {% if form.unit_price.errors %}
+                                                <div class="invalid-feedback">{{ form.unit_price.errors }}</div>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="id_price_valid_until_{{ forloop.counter0 }}" class="form-label fw-bold">Price Valid Until</label>
+                                            <input type="date" class="form-control {% if form.price_valid_until.errors %}is-invalid{% endif %}" id="price_valid_until_{{ forloop.counter0 }}" name="form-{{ forloop.counter0 }}-price_valid_until" value="{{ form.price_valid_until.value|default:'' }}">
+                                            {% if form.price_valid_until.errors %}
+                                                <div class="invalid-feedback">{{ form.price_valid_until.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="button-below-container">
+                        <a href="{% url 'request_quotations_list' %}" class="btn btn-danger">Back</a>
+                        <button type="submit" class="btn btn-success">Submit Quotation</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

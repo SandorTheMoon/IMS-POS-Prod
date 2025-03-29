@@ -1,0 +1,195 @@
+{% extends 'inventory_base.html' %}
+
+{% block title %}Filter Wasted Product List{% endblock %}
+
+{% block content %}
+<style>
+.title-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0px;
+}
+
+.title-container h3 {
+    text-align: center;
+    font-size: 42px;
+    font-weight: bold;
+}
+
+.upper-section-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 20px;
+    margin-bottom: 40px;
+}
+
+.search-bar-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 30px;
+}
+
+.search-bar {
+    display: flex;
+    flex-direction: column;
+}
+
+.search-bar label{
+    font-weight: bold;
+}
+
+.search-bar input {
+    height: 40px;
+    width: 220px;
+    border-radius: 10px;
+    border-style: none;
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.search-bar select {
+    height: 40px;
+    width: 220px;
+    border-radius: 10px;
+    border-style: none;
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.search-bar-container button {
+    color: white;
+    background-color: #8E0D0D;
+    margin-top: 30px;
+    height: 40px;
+    width: 100px;
+    border-radius: 10px;
+    border-style: none;
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.table-container {
+    width: 100%;
+    padding: 0px 20px;
+}
+
+.table-responsive {
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.pagination {
+    padding: 10px 20px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media screen and (max-width: 520px) {
+    .upper-section-container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .search-bar-container {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .search-bar-container input {
+        height: 30px;
+        width: 200px;
+    }
+
+    .search-bar-container select {
+        height: 30px;
+        width: 200px;
+    }
+
+    .search-bar-container button {
+        height: 30px;
+    }
+}
+</style>
+
+<div class="title-container">
+    <h3>Wasted Products</h3>
+</div>
+
+<div class="upper-section-container">
+    <form method="get" id="filterForm" class="search-bar-container">
+        <div class="search-bar">
+            <label for="id_sku" class="form-label">SKU</label>
+            <input type="text" class="form-control" id="id_sku" name="sku" placeholder="Search by SKU">
+        </div>
+    
+        <div class="search-bar">
+            <label for="id_name" class="form-label">Name</label>
+            <input type="text" class="form-control" id="id_name" name="name" placeholder="Search by Name">
+        </div>
+    
+        <div class="search-bar">
+            <label for="id_category" class="form-label">Category</label>
+            <select class="form-control" id="id_category" name="category">
+                {% for value, label in form.category.field.widget.choices %}
+                    <option value="{{ value }}" {% if value == form.category.value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="search-bar">
+            <label for="id_date_wasted" class="form-label">Date Wasted</label>
+            <input type="date" class="form-control" id="id_date_wasted" name="date_wasted" value="{{ form.date_wasted.value|default:'' }}">
+        </div>
+
+        <button type="submit">Filter</button>
+    </form>
+</div>
+
+
+<div class="table-container">
+    <div class="table-responsive p-3 rounded-3 bg-light">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th scope="col" class="text-truncate small">SKU</th>
+                    <th scope="col" class="text-truncate small">Name</th>
+                    <th scope="col" class="text-truncate small">Category</th>
+                    <th scope="col" class="text-truncate small">Qty</th>
+                    <th scope="col" class="text-truncate small">Actual Unit</th>
+                    <th scope="col" class="text-truncate small">Date Wasted</th>
+                    <th scope="col" class="text-truncate small">Wasted by</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in page_obj %}
+                    <tr>
+                        <td scope="row" class="text-truncate small">{{ p.product.sku }}</td>
+                        <td scope="row" class="text-truncate small">{{ p.product.name }}</td>
+                        <td scope="row" class="text-truncate small">{{ p.product.category }}</td>
+                        <td scope="row" class="text-truncate small">{{ p.quantity }}</td>
+                        <td scope="row" class="text-truncate small">{{ p.product.measurement }}</td>
+                        <td scope="row" class="text-truncate small">{{ p.date_wasted|date:"d/m/Y" }}</td>
+                        <td scope="row" class="text-truncate small">{{ p.user.username }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="pagination">
+    {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}" class="text-primary small">Previous</a>
+    {% endif %}
+
+    <span class="mx-2">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="text-primary small">Next</a>
+    {% endif %}
+</div>
+{% endblock %}

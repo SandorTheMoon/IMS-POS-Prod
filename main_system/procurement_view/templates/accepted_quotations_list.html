@@ -1,0 +1,79 @@
+{% extends 'procurement_base.html' %}
+
+{% block title %}Accepted Quotations List{% endblock %}
+
+{% block content %}
+<style>
+.table-responsive {
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+h3 {
+    font-size: 42px;
+    font-weight: bold;
+}
+</style>
+<div class="container my-4">
+    <h3 class="mt-4 mb-2">Accepted Quotations</h3>
+    
+    <div class="table-responsive p-3 rounded-3 bg-light">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th scope="col" class="small">Quotation No</th>
+                    <th scope="col" class="small">Supplier</th>
+                    <th scope="col" class="small">Valid Until</th>
+                    <th scope="col" class="small">Products</th>
+                    <th scope="col" class="text-center small">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for quotation in page_obj %}
+                <tr>
+                    <th scope="row" class="small">{{ quotation.quotation_no }}</th>
+                    <td class="small">{{ quotation.supplier }}</td>
+                    <td class="small">{{ quotation.quote_valid_until }}</td>
+                    <td class="small">
+                        <ul class="list-group list-group-flush">
+                            {% for item in quotation.items.all %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div class="d-flex flex-column mb-1">
+                                    <strong>{{ item.product_name }}</strong>
+                                    <div class="d-flex flex-row mt-0">
+                                        <span class="me-3"><strong>Qty:</strong> {{ item.quantity }}</span>
+                                        <span><strong>Unit Price:</strong> ₱ {{ item.unit_price|floatformat:2 }}</span>
+                                    </div>
+                                    <span><strong>Price Valid Until:</strong> {{ item.price_valid_until }}</span>
+                                </div>
+                            </li>
+                            {% empty %}
+                            <li class="list-group-item">No products available</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                    <td class="text-center small">
+                        <a href="{% url 'create_purchase_request_from_quotation' quotation.signed_id %}" class="btn btn-outline-primary btn-sm">Create Purchase Request</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center text-muted small">No accepted quotations available.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}" class="text-primary small">Previous</a>
+        {% endif %}
+    
+        <span class="mx-2">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+    
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="text-primary small">Next</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
