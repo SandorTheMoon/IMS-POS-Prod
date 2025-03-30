@@ -30,7 +30,7 @@ load_dotenv()
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 # DEBUG = True
 
 ALLOWED_HOSTS = ['www.stockord.win', 'stockord.win', '13.214.241.49', '*']
@@ -67,7 +67,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # Whitenoise Middleware
+    #'whitenoise.middleware.WhiteNoiseMiddleware',  # Whitenoise Middleware
     # Lock user after multiple failed attempts
     'middleware.IPLockMiddleware',
 
@@ -178,7 +178,7 @@ CSP_CONNECT_SRC = ("'self'",)  # API sources
 CSP_FRAME_SRC = ("https://www.google.com")  # Prevent framing unless necessary
 
 # CONTENT SECURITY POLICY
-CSP_DEFAULT_SRC = ("'self'",f"https://stockordbucket.s3.amazonaws.com")
+CSP_DEFAULT_SRC = ("'self'",f"https://stockords3.s3.amazonaws.com")
 CSP_SCRIPT_SRC = (
     "'self'",
     "'unsafe-inline'",
@@ -186,8 +186,8 @@ CSP_SCRIPT_SRC = (
     "https://cdn.jsdelivr.net",
     "https://www.google.com",       # Allow reCAPTCHA scripts
     "https://www.gstatic.com",
-    "https://stockordbucket.s3.amazonaws.com",
-    "https://stockordbucket.s3-ap-southeast-1.amazonaws.com",  # Region-specific S3 URL
+    "https://stockords3.s3.amazonaws.com",
+    "https://stockords3.s3-ap-southeast-1.amazonaws.com",  # Region-specific S3 URL
     # '*', #For Debugging only
 )
 CSP_STYLE_SRC = (
@@ -196,11 +196,11 @@ CSP_STYLE_SRC = (
     "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css",
     "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css",
     "https://fonts.googleapis.com",  # Add this to allow Google Fonts
-    "https://stockordbucket.s3.amazonaws.com",
-    "https://stockordbucket.s3-ap-southeast-1.amazonaws.com",  # Region-specific S3 URL
+    "https://stockords3.s3.amazonaws.com",
+    "https://stockords3.s3-ap-southeast-1.amazonaws.com",  # Region-specific S3 URL
     # '*', #For Debugging only
 )
-CSP_IMG_SRC = ("'self'", "data:", "https://stockordbucket.s3.amazonaws.com", "https://stockordbucket.s3-ap-southeast-1.amazonaws.com","https://stockordbucket.s3.amazonaws.com/images/")  # Image sources
+CSP_IMG_SRC = ("'self'", "data:", "https://stockords3.s3.amazonaws.com", "https://stockords3.s3-ap-southeast-1.amazonaws.com","https://stockords3.s3.amazonaws.com/images/")  # Image sources
 CSP_FONT_SRC = (
     "'self'", 
     "https://fonts.googleapis.com", 
@@ -231,13 +231,13 @@ CSP_STYLE_SRC_ELEM = CSP_STYLE_SRC
 
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_ID')
 AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_KEY')
-AWS_STORAGE_BUCKET_NAME = 'stockordbucket'
+AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_BUCKET_NAME')
 AWS_S3_REGION_NAME = 'ap-southeast-1'  # e.g., 'us-east-1'
 AWS_QUERYSTRING_AUTH = False  # Disable query parameter authentication for static files
 
 # Use S3 for static files
-STATIC_URL = f'https://stockordbucket.s3.amazonaws.com/'
-# MEDIA_URL = f'https://stockordbucket.s3.amazonaws.com/images/'
+STATIC_URL = f'https://stockords3.s3.amazonaws.com/'
+# MEDIA_URL = f'https://stockords3.s3.amazonaws.com/images/'
 # Use S3 for static file storage
 STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
