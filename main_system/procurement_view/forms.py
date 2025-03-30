@@ -21,6 +21,12 @@ class RequestQuotationForm(forms.ModelForm):
             'quote_valid_until': forms.DateInput(attrs={'type': 'date'})
         }
 
+
+def get_product_choices():
+    return [('', '--- Select Existing Product ---')] + [
+        (product.name, product.name) for product in Product.objects.all()
+    ]
+
 class RequestQuotationItemForm(forms.ModelForm):
     class Meta:
         model = RequestQuotationItem
@@ -32,8 +38,7 @@ class RequestQuotationItemForm(forms.ModelForm):
         }
 
     product_name = forms.ChoiceField(
-        choices=[('', '--- Select Existing Product ---')] +
-                [(product.name, product.name) for product in Product.objects.all()],
+        choices=get_product_choices,
         required=False,
         label='Existing Product'
     )
@@ -77,11 +82,11 @@ class PurchaseOrderItemForm(forms.ModelForm):
         fields = ['product_name', 'quantity', 'unit_price']
 
     product_name = forms.ChoiceField(
-        choices=[('', '--- Select Existing Product ---')] + 
-                [(product.name, product.name) for product in Product.objects.all()],
+        choices=get_product_choices,
         required=False,
         label='Existing Product'
     )
+
     
     other_product_name = forms.CharField(max_length=255, required=False, label='Other Product Name', widget=forms.TextInput(attrs={'placeholder': 'Enter custom product name if not in list'})
 )
