@@ -1,11 +1,11 @@
 import os
 from io import BytesIO
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import RequestQuotationForm, RequestQuotationItemForm, RequestQuotationItemFormSet, EditQuotationPriceForm, PurchaseOrderForm, PurchaseOrderItemFormSet, PurchaseInvoiceForm
+from .forms import RequestQuotationForm, RequestQuotationItemForm, RequestQuotationItemFormSet, EditQuotationPriceForm, PurchaseOrderForm, PurchaseInvoiceForm
 from .models import RequestQuotation, RequestQuotationItem, PurchaseOrder, PurchaseOrderItem
 from .utils import add_or_update_product
 from login_view.models import CompanyProfile
-from supplier_view.models import QuotationSubmission, QuotationSubmissionItem, PurchaseInvoice, PurchaseInvoiceItem
+from supplier_view.models import QuotationSubmission, PurchaseInvoice
 from django.http import HttpResponse
 from django.utils import timezone
 from datetime import date

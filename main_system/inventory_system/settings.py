@@ -104,12 +104,12 @@ WSGI_APPLICATION = 'inventory_system.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgresqldb',
-        'USER': 'postgresmaster',
-        'PASSWORD': 'postgres123!',
-        'HOST': 'stockord-db.cx2yqm0akcr4.ap-southeast-1.rds.amazonaws.com',  # Default is 'localhost'
-        'PORT': '5432',  # Default is '5432'
+        'ENGINE': os.environ.get('DATABASE_ENGINE'),
+        'NAME': os.environ.get('DATABASE_NAME'),
+        'USER': os.environ.get('DATABASE_USER'),
+        'PASSWORD': os.environ.get('DATABASE_PASSWORD'),
+        'HOST': os.environ.get('DATABASE_HOST'),
+        'PORT': os.environ.get('DATABASE_PORT'),
     }
 }
 
