@@ -35,6 +35,7 @@ h3 {
                     <th scope="col" class="small">Prepared By</th>
                     <th scope="col" class="small">Quote Valid Until</th>
                     <th scope="col" class="small">Status</th>
+                    <th scope="col" class="small">Offers</th>
                     <th scope="col" class="text-center small">Actions</th>
                 </tr>
             </thead>
@@ -54,6 +55,13 @@ h3 {
                             {% else %}
                                 <span class="badge bg-">{{ quotation.status }}</span>
                             {% endif %}
+                        </td>
+                        <td scope="row" class="small">
+                            {% for item in quotation.items.all %}
+                                <div><span style="font-weight: bold;">{{ item.product_name }}</span>: ₱{{ item.unit_price|floatformat:2 }}</div>
+                            {% empty %}
+                                <div class="text-muted">No items</div>
+                            {% endfor %}
                         </td>
                         <td scope="row" class="text-center small">
                             <a href="{% url 'supplier_quotation_submission_detail' quotation.signed_id %}" class="btn btn-outline-primary btn-sm">Details</a>
