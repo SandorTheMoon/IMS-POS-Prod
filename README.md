@@ -66,14 +66,14 @@ We are 4th Year College Students taking Bachelor of Science in Information Syste
 - Go to Python's official website and download the Python installer: [https://www.python.org/downloads/](https://www.python.org/downloads/)
 - Run the installer **.exe** file.
 - Be sure to tick the box of **Add python.exe to PATH.** before installation.
-  ![1746266696527](image/README/1746266696527.png)
+  - ![1746266696527](image/README/1746266696527.png)
 - Then proceed to the installation.
 
 ### 2. Cloning the repository
 
 - Visit the Github repository: [https://github.com/SandorTheMoon/IMS-POS-Prod](https://github.com/SandorTheMoon/IMS-POS-Prod)
 - Clone the repository in any of your preferred way.
-  ![1746267707186](image/README/1746267707186.png)
+  - ![1746267707186](image/README/1746267707186.png)
 
 ### 3. Setting Up Virtual Environment and Installing Requirements
 
@@ -81,33 +81,33 @@ We are 4th Year College Students taking Bachelor of Science in Information Syste
 - Open the terminal.
   - To open terminal, press: **ctrl + `**
   - To open a new terminal, press: **ctrl + shift + `**
-  ![1746268178840](image/README/1746268178840.png)
+  - ![1746268178840](image/README/1746268178840.png)
 - In the terminal, run this command:
   - `python -m venv venv`
-  ![1746268764046](image/README/1746268764046.png)
+  - ![1746268764046](image/README/1746268764046.png)
 - This should create a folder named **venv** inside the project directory.
-  ![1746268688771](image/README/1746268688771.png)
+  - ![1746268688771](image/README/1746268688771.png)
 - Activate the Virtual Environment using this command:
   - `venv/Scripts/activate`
-  ![1746269030529](image/README/1746269030529.png)
+  - ![1746269030529](image/README/1746269030529.png)
   - This is an indicator that you have successfully activated the Virtual Environment:
-  ![1746269067734](image/README/1746269067734.png)
+  - ![1746269067734](image/README/1746269067734.png)
 - Change the directory inside the main folder named **main_system** that contains all the system files by running this command:
   - `cd main_system`
-  ![1746269221832](image/README/1746269221832.png)
+  - ![1746269221832](image/README/1746269221832.png)
   - This is an indicator that you have successfully changed the directory to the main system folder.
-  ![1746269286598](image/README/1746269286598.png)
+  - ![1746269286598](image/README/1746269286598.png)
 - Install the required package and dependency by running this command:
   - `pip install -r requirements.txt`
-  ![1746269686687](image/README/1746269686687.png)
+  - ![1746269686687](image/README/1746269686687.png)
   - If the installation is successful, you'll see an output similar to this:
   - It may not look exactly the same in your case, but it should be something similar.
-  ![1746269755838](image/README/1746269755838.png)
+  - ![1746269755838](image/README/1746269755838.png)
 
 ### 4. Setting Up Environment Variable (.env) File
 
 - Inside the project's folder **IMS-POS-Prod**, create a new file and name it **.env**
-  ![1746270233473](image/README/1746270233473.png)
+  - ![1746270233473](image/README/1746270233473.png)
 - Paste the following content inside the **.env** file and make sure to update the values according to your project's settings, as this will cause errors if not configured properly:
   ```env
   # Admin Dashboard's URL
@@ -206,11 +206,11 @@ We are 4th Year College Students taking Bachelor of Science in Information Syste
 ### 5. Applying Migrations to the Database
 - In order for database models to replicate and apply to the actual database instance, run the following command:
   - `py manage.py makemigrations`
-  ![1746272514559](image/README/1746272514559.png)
+  - ![1746272514559](image/README/1746272514559.png)
   - Then run this command: `py manage.py migrate`
-  ![1746272564525](image/README/1746272564525.png)
+  - ![1746272564525](image/README/1746272564525.png)
   - It may not look exactly the same in your case, but it should be something similar.
-  ![1746272631672](image/README/1746272631672.png)
+  - ![1746272631672](image/README/1746272631672.png)
   
 
 
@@ -219,18 +219,18 @@ We are 4th Year College Students taking Bachelor of Science in Information Syste
 - or Open a New Terminal **ctrl + shift + `**
 - Activate the Virtual Environment inside the project directory **IMS-POS-Prod** by running the command:
   - `venv/Scripts/activate`
-  ![1746271950893](image/README/1746271950893.png)
+  - ![1746271950893](image/README/1746271950893.png)
   - It should look like this, or something similar:
-  ![1746271985470](image/README/1746271985470.png)
+  - ![1746271985470](image/README/1746271985470.png)
 - Change the directory to the system's folder containing all system files by running the command:
   - `cd main_system`
-  ![1746272048253](image/README/1746272048253.png)
+  - ![1746272048253](image/README/1746272048253.png)
   - It should look like this, or something similar:
-  ![1746272070080](image/README/1746272070080.png)
+  - ![1746272070080](image/README/1746272070080.png)
 - To finally run the project, run the command:
   - `python manage.py runserver`
-  ![1746272721993](image/README/1746272721993.png)
+  - ![1746272721993](image/README/1746272721993.png)
   - It should look like this:
-  ![1746272755522](image/README/1746272755522.png)
+  - ![1746272755522](image/README/1746272755522.png)
   - Then paste this URL in your preferred browser **http://127.0.0.1:8000/**
-  ![1746272892754](image/README/1746272892754.png)
+  - ![1746272892754](image/README/1746272892754.png)
